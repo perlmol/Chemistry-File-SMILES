@@ -5,7 +5,7 @@ WriteMakefile(
     'NAME'		=> 'Chemistry::File::SMILES',
     'VERSION_FROM'	=> 'SMILES.pm', # finds $VERSION
     'PREREQ_PM'		=> {qw(
-        Chemistry::Mol              0.26
+        Chemistry::Mol              0.30
         Chemistry::Canonicalize     0.10
         Chemistry::Bond::Find       0.21
         Chemistry::Ring             0.15

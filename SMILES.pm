@@ -1,6 +1,6 @@
 package Chemistry::File::SMILES;
 
-$VERSION = "0.15";
+$VERSION = "0.20";
 use 5.006001;
 use strict;
 use warnings;
@@ -15,25 +15,23 @@ Chemistry::File::SMILES - SMILES parser
 
 =head1 SYNOPSYS
 
-
     #!/usr/bin/perl
     use Chemistry::File::SMILES;
 
-    my $s = 'C1C[13C]1(=O)[O-]';
-
+    my $s = 'C1CC1(=O)[O-]';
+    my $mol = Chemistry::Mol->parse($s, format => 'smiles');
 
 =head1 DESCRIPTION
 
-This object-oriented module parses a SMILES (Simplified Molecular Input Line
-Entry Specification) string. 
+This module parses a SMILES (Simplified Molecular Input Line
+Entry Specification) string. It registers the 'smiles' format with 
+Chemistry::Mol.
 
 =cut
 
 # INITIALIZATION
 Chemistry::Mol->register_format('smiles');
 my $Smiles_parser = __PACKAGE__->new;
-
-=head1 METHODS
 
 =over 4
 
@@ -72,7 +70,7 @@ my $Complex_atom = qr/
         (\d*)                       #4 isotope
         ($Symbol)                   #5 symbol
         (\@{0,2})                   #6 chirality
-        (?:H(\d*))?                 #7 H-count
+        (?:(H\d*))?                 #7 H-count
         (\+{2,}|-{2,}|\+\d*|-\d*)?  #8 charge
         \]                          #end atom 
     )
@@ -93,6 +91,16 @@ my $Chain = qr/
 /x;
 
 my $digits_re = qr/($Bond)(\%\d\d|\d)/;
+
+my %type_to_order = (
+    '-' => 1,
+    '=' => 2,
+    '#' => 3,
+    '/' => 1,
+    '\\' => 1,
+    '' => 1, # not strictly true
+    '.' => 0,
+);
 
 =begin comment
 
@@ -149,6 +157,14 @@ sub parse {
         } elsif ($sym2) { # Complex atom
             no warnings;
             my @digs = parse_digits($dig);
+            if ($hcnt eq 'H') { 
+                $hcnt = 1;
+            } else {
+                $hcnt =~ s/H//;
+            }
+            unless ($chg =~ /\d/) {
+                $chg = ($chg =~ /-/) ? -length($chg) : length($chg);
+            }
             $self->atom($mol, $bnd, $iso, $sym2, $chir, $hcnt || 0, $chg, \@digs);
         } else {
             croak "SMILES ERROR: '$all'\n";
@@ -212,7 +228,12 @@ be a number, a string, or an object).
 # Default add_atom callback 
 sub add_atom {
     my ($mol, $iso, $sym, $chir, $hcount, $chg) = @_;
-    $mol->new_atom(symbol=>$sym);
+    my $atom = $mol->new_atom(symbol=>$sym);
+    $iso && $atom->attr('smiles/isotope' => $iso);
+    $chir && $atom->attr('smiles/chirality' => $chir);
+    length $hcount && $atom->attr('smiles/h_count' => $hcount);
+    $chg && $atom->attr('smiles/charge' => $chg);
+    $atom;
 }
 
 =item add_bond($mol, $type, $a1, $a2)
@@ -231,7 +252,10 @@ the return values from the add_atom() callback.
 # Default add_bond callback 
 sub add_bond {
     my ($mol, $type, $a1, $a2) = @_;
-    $mol->new_bond(type=>$type, atoms=>[$a1, $a2]);
+    my $order = $type_to_order{$type};
+    my $bond = $mol->new_bond(type=>$type, atoms=>[$a1, $a2], order=>$order);
+    $bond->attr("smiles/type" => $type);
+    $bond;
 }
 
 sub start_branch {
@@ -246,17 +270,19 @@ sub end_branch {
     pop @{$self->{stack}};
 }
 
-=head1 SEE ALSO
-
-The SMILES Home Page at http://www.daylight.com/dayhtml/smiles/
-The Daylight Theory Manual at 
-http://www.daylight.com/dayhtml/doc/theory/theory.smiles.html
-
 =head1 BUGS
 
 The SMILES specification is not fully implemented yet. For example, branches
 that start before an atom (such as (OC)C, which should be equivalent to C(CO)
 and COC).
+
+=head1 SEE ALSO
+
+L<Chemistry::Mol>, L<Chemistry::File>
+
+The SMILES Home Page at http://www.daylight.com/dayhtml/smiles/
+The Daylight Theory Manual at 
+http://www.daylight.com/dayhtml/doc/theory/theory.smiles.html
 
 =head1 AUTHOR
 
@@ -264,7 +290,7 @@ Ivan Tubert E<lt>itub@cpan.orgE<gt>
 
 =head1 COPYRIGHT
 
-Copyright (c) 2003 Ivan Tubert. All rights reserved. This program is free
+Copyright (c) 2004 Ivan Tubert. All rights reserved. This program is free
 software; you can redistribute it and/or modify it under the same terms as
 Perl itself.
 

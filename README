@@ -1,5 +1,5 @@
-Chemistry/File::SMILES version 0.2
-==================================
+Chemistry/File::SMILES version 0.20
+===================================
 
 This object-oriented module parses a SMILES (Simplified Molecular Input Line
 Entry Specification) string. 

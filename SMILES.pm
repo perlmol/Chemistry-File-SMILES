@@ -377,10 +377,10 @@ sub calc_implicit_hydrogens {
     my ($atom) = @_;
     no warnings 'uninitialized';
     my $h_count = $ORGANIC_ELEMS{$atom->symbol} - $atom->valence;
-    $h_count = 0 if $h_count < 0;
     if ($atom->attr("smiles/aromatic") and $atom->symbol =~ /^[CN]$/) {
         $h_count--;
     }
+    $h_count = 0 if $h_count < 0;
     $h_count;
 }
 

@@ -1,6 +1,6 @@
 package Chemistry::File::SMILES;
 
-$VERSION = "0.31";
+$VERSION = "0.32";
 # $Id$
 
 use 5.006;
@@ -83,9 +83,9 @@ sub parse_string {
 
 my $Symbol = qr/
     s|p|o|n|c|b|Zr|Zn|Yb|Y|Xe|W|V|U|Tm|Tl|Ti|Th|
-    Te|Tc|Tb|Ta|Sr|Sn|Sm|Si|Sg|SeSc|Sb|S|Ru|Rn|Rh|Rf|Re|Rb|Ra|
+    Te|Tc|Tb|Ta|Sr|Sn|Sm|Si|Sg|Se|Sc|Sb|S|Ru|Rn|Rh|Rf|Re|Rb|Ra|
     Pu|Pt|Pr|Po|Pm|Pd|Pb|Pa|P|Os|O|Np|No|Ni|Ne|NdNb|Na|N|Mt|Mt|
-    Mo|Mn|Mg|Md|Lu|Lr|Li|La|Kr|K|Ir|In|I|Hs|Hs|Ho|Hg|Hf|He|H|Ge
+    Mo|Mn|Mg|Md|Lu|Lr|Li|La|Kr|K|Ir|In|I|Hs|Hs|Ho|Hg|Hf|He|H|Ge|
     Gd|Ga|Fr|Fm|Fe|F|Eu|Es|Er|Dy|Ds|Db|Cu|Cs|Cr|Co|Cm|Cl|Cf|Ce|
     Cd|Ca|C|Br|Bk|BiBh|Be|Ba|B|Au|At|As|Ar|Am|Al|Ag|Ac|\*
 /x; # Order is reverse alphabetical to ensure longest match
@@ -278,7 +278,7 @@ sub add_atom {
 # Default add_bond callback 
 sub add_bond {
     my ($mol, $type, $a1, $a2) = @_;
-    my $order = $type_to_order{$type};
+    my $order = $type_to_order{$type} or return; # don't add bonds of order 0
     my $bond = $mol->new_bond(type=>$type, atoms=>[$a1, $a2], order=>$order);
     $bond->attr("smiles/type" => $type);
     $bond;
@@ -425,7 +425,7 @@ SMILES output.
 
 =head1 VERSION
 
-0.31
+0.32
 
 =head1 SEE ALSO
 

@@ -1,6 +1,6 @@
 N[C@H](C)C(=O)O
 ATOM1(,N,,,)
-ATOM2(,C,@,0,)
+ATOM2(,C,@,1,0)
 BOND(,1,2)
 ATOM3(,C,,,)
 BOND(,2,3)

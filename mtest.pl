@@ -1,12 +1,12 @@
-#!/usr/bin/perl
+#!/home/ivan/bin/perl
 
 use blib;
-use Chemistry::Smiles;
+use Chemistry::File::SMILES;
 
 print("Please give a SMILES string\n"), exit unless $ARGV[0];
 
 my $i=1;
-my $my_parser = new Chemistry::Smiles(
+my $my_parser = Chemistry::File::SMILES->new(
     add_atom => sub {shift; local $"=','; print "ATOM$i(@_)\n";$i++;},
     add_bond => sub {shift; local $"=','; print "BOND(@_)\n"}
 );

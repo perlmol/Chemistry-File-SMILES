@@ -1,6 +1,6 @@
 package Chemistry::File::SMILES;
 
-$VERSION = "0.42";
+$VERSION = "0.43";
 # $Id$
 
 use 5.006;
@@ -649,6 +649,10 @@ output.
 Reading branches that start before an atom, such as (OC)C, which should be
 equivalent to C(OC) and COC, according to some variants of the SMILES
 specification. Many other tools don't implement this rule either.
+
+The kekulize option works by increasing the bond orders of atoms that don't
+have their usual valences satisfied. This may cause problems if you have atoms
+with explicitly low hydrogen counts.
 
 =head1 VERSION
 

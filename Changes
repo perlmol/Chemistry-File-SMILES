@@ -1,6 +1,6 @@
 Revision history for Perl extension Chemistry::File::SMILES
 
-0.43
+0.43  Nov 17 2004
         - Fixed incompatibilities with the Chemistry::File 0.30 interface;
           renamed the ancient 'new' method to 'new_parser'.
         - Refactored the writing code to make it more object-oriented.

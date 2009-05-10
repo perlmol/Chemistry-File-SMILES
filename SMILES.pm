@@ -1,6 +1,6 @@
 package Chemistry::File::SMILES;
 
-$VERSION = "0.45";
+$VERSION = "0.46";
 # $Id$
 
 use 5.006;
@@ -183,7 +183,7 @@ my $Symbol = qr/
     Pu|Pt|Pr|Po|Pm|Pd|Pb|Pa|P|Os|O|Np|No|Ni|Ne|Nd|Nb|Na|N|Mt|Mt|
     Mo|Mn|Mg|Md|Lu|Lr|Li|La|Kr|K|Ir|In|I|Hs|Hs|Ho|Hg|Hf|He|H|Ge|
     Gd|Ga|Fr|Fm|Fe|F|Eu|Es|Er|Dy|Ds|Db|Cu|Cs|Cr|Co|Cm|Cl|Cf|Ce|
-    Cd|Ca|C|Br|Bk|Bi|Bh|Be|Ba|B|Au|At|As|Ar|Am|Al|Ag|Ac|\*
+    Cd|Ca|C|Br|Bk|Bi|Bh|Be|Ba|B|Au|At|As|Ar|Am|Al|Ag|Ac|\*|R|X
 /x; # Order is reverse alphabetical to ensure longest match
 
 my $Simple_symbol = qr/Br|Cl|B|C|N|O|P|S|F|I|H|s|p|o|n|c|b/;
@@ -663,7 +663,7 @@ with explicitly low hydrogen counts.
 
 =head1 VERSION
 
-0.45
+0.46
 
 =head1 SEE ALSO
 
@@ -682,7 +682,7 @@ Ivan Tubert-Brohman E<lt>itub@cpan.orgE<gt>
 
 =head1 COPYRIGHT
 
-Copyright (c) 2005 Ivan Tubert-Brohman. All rights reserved. This program is
+Copyright (c) 2009 Ivan Tubert-Brohman. All rights reserved. This program is
 free software; you can redistribute it and/or modify it under the same terms as
 Perl itself.
 
